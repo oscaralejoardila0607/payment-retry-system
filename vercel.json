@@ -1,6 +1,6 @@
 {
   "buildCommand": "cd client && ./node_modules/.bin/vite build",
-  "installCommand": "npm install && cd client && npm install",
+  "installCommand": "npm install && cd client && npm install --include=dev",
   "outputDirectory": "client/dist",
   "rewrites": [
     {
