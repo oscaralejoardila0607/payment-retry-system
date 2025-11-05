@@ -1,0 +1,103 @@
+[
+  {
+    "name": "Insufficient Funds - Should Retry",
+    "input": {
+      "transactionId": "txn_test_001",
+      "merchantId": "mch_test_123",
+      "amount": 50000,
+      "currency": "COP",
+      "failureType": "insufficient_funds",
+      "failureCode": "P001",
+      "timestamp": "2025-11-04T10:00:00Z",
+      "paymentProcessor": "stripe",
+      "attemptNumber": 1
+    },
+    "expectedOutput": {
+      "shouldRetry": true,
+      "nextRetryWithin": 3600,
+      "maxRetries": 3,
+      "estimatedSuccessMin": 0.15,
+      "estimatedSuccessMax": 0.25
+    }
+  },
+  {
+    "name": "Network Timeout - Immediate Retry",
+    "input": {
+      "transactionId": "txn_test_002",
+      "merchantId": "mch_test_456",
+      "amount": 30000,
+      "currency": "COP",
+      "failureType": "network_timeout",
+      "failureCode": "N001",
+      "timestamp": "2025-11-04T10:05:00Z",
+      "paymentProcessor": "nequi",
+      "attemptNumber": 1
+    },
+    "expectedOutput": {
+      "shouldRetry": true,
+      "nextRetryWithin": 5,
+      "maxRetries": 3,
+      "estimatedSuccessMin": 0.55,
+      "estimatedSuccessMax": 0.65
+    }
+  },
+  {
+    "name": "Card Stolen - Do Not Retry",
+    "input": {
+      "transactionId": "txn_test_003",
+      "merchantId": "mch_test_789",
+      "amount": 75000,
+      "currency": "COP",
+      "failureType": "card_stolen",
+      "failureCode": "F001",
+      "timestamp": "2025-11-04T10:10:00Z",
+      "paymentProcessor": "pse",
+      "attemptNumber": 1
+    },
+    "expectedOutput": {
+      "shouldRetry": false,
+      "category": "non_retryable_security",
+      "recommendedAction": "contact_customer"
+    }
+  },
+  {
+    "name": "Rate Limit Exceeded - Delay Retry",
+    "input": {
+      "transactionId": "txn_test_004",
+      "merchantId": "mch_test_999",
+      "amount": 40000,
+      "currency": "COP",
+      "failureType": "card_declined",
+      "failureCode": "P002",
+      "timestamp": "2025-11-04T10:15:00Z",
+      "paymentProcessor": "stripe",
+      "attemptNumber": 5
+    },
+    "expectedOutput": {
+      "shouldRetry": false,
+      "reason": "rate_limit_exceeded",
+      "withinRateLimit": false,
+      "nextAvailableRetry": "2025-11-05T10:15:00Z"
+    }
+  },
+  {
+    "name": "Low Amount High Success - Prioritize Retry",
+    "input": {
+      "transactionId": "txn_test_005",
+      "merchantId": "mch_test_555",
+      "amount": 5000,
+      "currency": "COP",
+      "failureType": "insufficient_funds",
+      "failureCode": "P001",
+      "timestamp": "2025-11-04T14:30:00Z",
+      "paymentProcessor": "stripe",
+      "attemptNumber": 1
+    },
+    "expectedOutput": {
+      "shouldRetry": true,
+      "estimatedSuccessMin": 0.23,
+      "estimatedSuccessMax": 0.30,
+      "priorityLevel": "high"
+    }
+  }
+]

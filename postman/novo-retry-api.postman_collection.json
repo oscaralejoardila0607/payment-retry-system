@@ -1,0 +1,205 @@
+{
+  "info": {
+    "name": "Novo Retry Intelligence API",
+    "description": "Collection for testing the Novo payment retry intelligence API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "health"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 1: Insufficient Funds - Should Retry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_001\",\n  \"merchantId\": \"mch_test_123\",\n  \"amount\": 50000,\n  \"currency\": \"COP\",\n  \"failureType\": \"insufficient_funds\",\n  \"failureCode\": \"P001\",\n  \"timestamp\": \"2025-11-04T10:00:00Z\",\n  \"paymentProcessor\": \"stripe\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 2: Network Timeout - Immediate Retry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_002\",\n  \"merchantId\": \"mch_test_456\",\n  \"amount\": 30000,\n  \"currency\": \"COP\",\n  \"failureType\": \"network_timeout\",\n  \"failureCode\": \"N001\",\n  \"timestamp\": \"2025-11-04T10:05:00Z\",\n  \"paymentProcessor\": \"nequi\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 3: Card Stolen - Do Not Retry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_003\",\n  \"merchantId\": \"mch_test_789\",\n  \"amount\": 75000,\n  \"currency\": \"COP\",\n  \"failureType\": \"card_stolen\",\n  \"failureCode\": \"F001\",\n  \"timestamp\": \"2025-11-04T10:10:00Z\",\n  \"paymentProcessor\": \"pse\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 4: Rate Limit Exceeded",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_004\",\n  \"merchantId\": \"mch_test_999\",\n  \"amount\": 40000,\n  \"currency\": \"COP\",\n  \"failureType\": \"card_declined\",\n  \"failureCode\": \"P002\",\n  \"timestamp\": \"2025-11-04T10:15:00Z\",\n  \"paymentProcessor\": \"stripe\",\n  \"attemptNumber\": 5\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 5: Low Amount High Success",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_005\",\n  \"merchantId\": \"mch_test_555\",\n  \"amount\": 5000,\n  \"currency\": \"COP\",\n  \"failureType\": \"insufficient_funds\",\n  \"failureCode\": \"P001\",\n  \"timestamp\": \"2025-11-04T14:30:00Z\",\n  \"paymentProcessor\": \"stripe\",\n  \"cardLastFour\": \"8888\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 6: Processor Downtime",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_006\",\n  \"merchantId\": \"mch_test_101\",\n  \"amount\": 45000,\n  \"currency\": \"COP\",\n  \"failureType\": \"processor_downtime\",\n  \"failureCode\": \"P003\",\n  \"timestamp\": \"2025-11-04T11:00:00Z\",\n  \"paymentProcessor\": \"stripe\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 7: Invalid Card Details - No Retry",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_007\",\n  \"merchantId\": \"mch_test_202\",\n  \"amount\": 25000,\n  \"currency\": \"COP\",\n  \"failureType\": \"invalid_card_details\",\n  \"failureCode\": \"V001\",\n  \"timestamp\": \"2025-11-04T12:00:00Z\",\n  \"paymentProcessor\": \"pse\",\n  \"attemptNumber\": 1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test 8: With Merchant Config Override",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transactionId\": \"txn_test_008\",\n  \"merchantId\": \"mch_test_303\",\n  \"amount\": 60000,\n  \"currency\": \"COP\",\n  \"failureType\": \"card_declined\",\n  \"failureCode\": \"P002\",\n  \"timestamp\": \"2025-11-04T13:00:00Z\",\n  \"paymentProcessor\": \"stripe\",\n  \"attemptNumber\": 1,\n  \"merchantConfig\": {\n    \"maxRetries\": 5,\n    \"enableAutoRetry\": true\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/analyze-failure",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "v1", "analyze-failure"]
+        }
+      },
+      "response": []
+    }
+  ]
+}
