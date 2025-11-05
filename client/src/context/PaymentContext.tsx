@@ -67,11 +67,10 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
       // Add to local state immediately for responsive UI
       setPayments(prev => [payment, ...prev]);
 
-      // Save to Supabase
+      // Save to Supabase (let Supabase generate the UUID id)
       const { error } = await supabase
         .from('transactions')
         .insert([{
-          id: payment.id,
           transaction_id: payment.transactionId,
           merchant_id: payment.merchantId,
           customer_name: payment.customerName,
