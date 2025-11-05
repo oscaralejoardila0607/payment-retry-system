@@ -105,7 +105,14 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
         setCurrentPayment(prev => prev ? { ...prev, ...updates } : null);
       }
 
-      // Update in Supabase
+      // Update in Supabase using transaction_id instead of id
+      // Find the payment to get its transactionId
+      const payment = payments.find(p => p.id === id);
+      if (!payment) {
+        console.error('Payment not found for update');
+        return;
+      }
+
       const dbUpdates: any = {};
       if (updates.status) dbUpdates.status = updates.status;
       if (updates.failureType) dbUpdates.failure_type = updates.failureType;
@@ -115,7 +122,7 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase
         .from('transactions')
         .update(dbUpdates)
-        .eq('id', id);
+        .eq('transaction_id', payment.transactionId);
 
       if (error) {
         console.error('Error updating payment in Supabase:', error);
