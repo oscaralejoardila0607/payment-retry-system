@@ -65,7 +65,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
     };
 
     setResult(payment);
-    addPayment(payment);
+    await addPayment(payment);
     setIsProcessing(false);
   };
 
@@ -73,7 +73,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
     if (!result || result.status !== 'failed') return;
 
     try {
-      updatePayment(result.id, { status: 'analyzing' });
+      await updatePayment(result.id, { status: 'analyzing' });
 
       const analysis = await analyzeFailure({
         transactionId: result.transactionId,
@@ -94,7 +94,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
         status: 'analyzing' as const,
       };
 
-      updatePayment(result.id, { analysisResult: analysis, status: 'analyzing' });
+      await updatePayment(result.id, { analysisResult: analysis, status: 'analyzing' });
       setCurrentPayment(updatedPayment);
 
       if (onAnalyze) {
@@ -145,7 +145,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
     }
 
     setResult(updatedPayment);
-    updatePayment(result.id, updatedPayment);
+    await updatePayment(result.id, updatedPayment);
     setIsProcessing(false);
   };
 

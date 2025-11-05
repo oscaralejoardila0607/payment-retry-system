@@ -105,7 +105,7 @@ export default function RetryIntelligence() {
 
     if (retryAttempt.success) {
       // Retry succeeded
-      updatePayment(currentPayment.id, {
+      await updatePayment(currentPayment.id, {
         status: 'retry_success',
         attemptNumber: currentAttempt,
       });
@@ -115,7 +115,7 @@ export default function RetryIntelligence() {
       });
     } else {
       // Retry failed - update payment but allow more retries if within limit
-      updatePayment(currentPayment.id, {
+      await updatePayment(currentPayment.id, {
         status: 'retry_failed',
         attemptNumber: currentAttempt,
         failureType: retryAttempt.failureType,

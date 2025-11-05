@@ -139,9 +139,9 @@ export default function PaymentHistory() {
               {/* Clear History */}
               {payments.length > 0 && (
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     if (confirm('Are you sure you want to clear all payment history?')) {
-                      clearHistory();
+                      await clearHistory();
                     }
                   }}
                   className="flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 border border-red-300 dark:border-red-800 rounded-lg transition-colors"
