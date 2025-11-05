@@ -81,17 +81,10 @@ function App() {
         {/* Footer */}
         <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-center">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Novo Retry Intelligence API v1.1.0
+                Made with <span className="text-red-500">♥</span> by <span className="font-semibold text-gray-900 dark:text-white">Novo</span>
               </p>
-              <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-                <a href="/api/v1/health" target="_blank" className="hover:text-blue-600 dark:hover:text-blue-400">
-                  API Health
-                </a>
-                <span>•</span>
-                <span>Port 4000</span>
-              </div>
             </div>
           </div>
         </footer>
