@@ -30,6 +30,7 @@ export default function RetryIntelligence() {
   useEffect(() => {
     if (currentPayment && currentPayment.status === 'analyzing' && currentPayment.analysisResult) {
       setResponse(currentPayment.analysisResult);
+      setRetryResult(null); // Clear retry result when switching payments
       setFormData({
         transactionId: currentPayment.transactionId,
         merchantId: currentPayment.merchantId,
@@ -52,6 +53,7 @@ export default function RetryIntelligence() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setRetryResult(null); // Clear retry result when analyzing new transaction
     try {
       const result = await analyzeFailure({
         ...formData,
@@ -73,6 +75,7 @@ export default function RetryIntelligence() {
       setFormData({ ...formData, ...example, timestamp: new Date().toISOString() } as TransactionRequest);
       setResponse(null);
       setError(null);
+      setRetryResult(null); // Clear retry result when loading new example
     }
   };
 
