@@ -191,12 +191,18 @@ export default function RetryIntelligence() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount (COP) *</label>
-                  <input type="number" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: parseInt(e.target.value) || 0 })}
+                  <input type="number" value={formData.amount} onChange={(e) => {
+                    const value = e.target.value === '' ? 0 : parseInt(e.target.value);
+                    setFormData({ ...formData, amount: value });
+                  }}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" required min="0" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Attempt #</label>
-                  <input type="number" value={formData.attemptNumber} onChange={(e) => setFormData({ ...formData, attemptNumber: parseInt(e.target.value) || 1 })}
+                  <input type="number" value={formData.attemptNumber} onChange={(e) => {
+                    const value = e.target.value === '' ? 1 : parseInt(e.target.value);
+                    setFormData({ ...formData, attemptNumber: value });
+                  }}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" min="1" />
                 </div>
               </div>
