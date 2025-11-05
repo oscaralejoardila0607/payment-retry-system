@@ -15,12 +15,12 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState<SimulatedPayment | null>(null);
 
-  const [formData, setFormData] = useState<PaymentFormData>({
+  const [formData, setFormData] = useState({
     customerName: 'John Doe',
-    amount: 50000,
-    processor: 'stripe',
+    amount: '50000',
+    processor: 'stripe' as const,
     cardLastFour: '4242',
-    simulateOutcome: 'random',
+    simulateOutcome: 'random' as const,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,7 +43,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
     } else {
       simulationResult = simulatePayment({
         processor: formData.processor,
-        amount: formData.amount,
+        amount: Number(formData.amount),
         attemptNumber: 1,
       });
     }
@@ -53,7 +53,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
       transactionId,
       merchantId,
       customerName: formData.customerName,
-      amount: formData.amount,
+      amount: Number(formData.amount),
       currency: 'COP',
       processor: formData.processor,
       cardLastFour: formData.cardLastFour,
@@ -192,7 +192,7 @@ export default function PaymentSimulator({ onAnalyze }: PaymentSimulatorProps) {
                 <input
                   type="number"
                   value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   required
                   min="100"

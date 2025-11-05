@@ -16,14 +16,14 @@ export default function RetryIntelligence() {
   const [isRetrying, setIsRetrying] = useState(false);
   const [retryResult, setRetryResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  const [formData, setFormData] = useState<TransactionRequest>({
+  const [formData, setFormData] = useState({
     transactionId: '',
     merchantId: '',
-    amount: 50000,
-    currency: 'COP',
-    failureType: 'insufficient_funds',
-    paymentProcessor: 'stripe',
-    attemptNumber: 1,
+    amount: '50000',
+    currency: 'COP' as const,
+    failureType: 'insufficient_funds' as FailureType,
+    paymentProcessor: 'stripe' as PaymentProcessor,
+    attemptNumber: '1',
   });
 
   // Auto-fill form if coming from payment simulator
@@ -33,13 +33,13 @@ export default function RetryIntelligence() {
       setFormData({
         transactionId: currentPayment.transactionId,
         merchantId: currentPayment.merchantId,
-        amount: currentPayment.amount,
+        amount: String(currentPayment.amount),
         currency: currentPayment.currency,
         failureType: currentPayment.failureType!,
         failureReason: currentPayment.failureReason,
         paymentProcessor: currentPayment.processor,
         cardLastFour: currentPayment.cardLastFour,
-        attemptNumber: currentPayment.attemptNumber,
+        attemptNumber: String(currentPayment.attemptNumber),
       });
     }
   }, [currentPayment]);
@@ -55,6 +55,8 @@ export default function RetryIntelligence() {
     try {
       const result = await analyzeFailure({
         ...formData,
+        amount: Number(formData.amount),
+        attemptNumber: Number(formData.attemptNumber),
         timestamp: new Date().toISOString()
       });
       setResponse(result);
@@ -191,12 +193,12 @@ export default function RetryIntelligence() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Amount (COP) *</label>
-                  <input type="number" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: Number(e.target.value) })}
+                  <input type="number" value={formData.amount} onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" required min="0" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Attempt #</label>
-                  <input type="number" value={formData.attemptNumber} onChange={(e) => setFormData({ ...formData, attemptNumber: Number(e.target.value) })}
+                  <input type="number" value={formData.attemptNumber} onChange={(e) => setFormData({ ...formData, attemptNumber: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white" min="1" />
                 </div>
               </div>
